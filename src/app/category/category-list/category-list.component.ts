@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
+
 import { Category } from '../model/category';
 import { CategoryService } from '../category.service';
 import { CategoryEditComponent } from '../category-edit/category-edit.component';
