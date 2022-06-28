@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from './core/core.module';
 import { CategoryModule } from './category/category.module';
+import { AuthorModule } from './author/author.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CategoryModule } from './category/category.module';
     AppRoutingModule,
     CoreModule,
     CategoryModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
