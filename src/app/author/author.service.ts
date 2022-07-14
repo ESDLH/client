@@ -34,7 +34,8 @@ export class AuthorService {
     }
 
     getAllAuthors(): Observable<Author[]> {
-        return of (AUTHOR_DATA_LIST);
+        
+        return this.http.get<Author[]>('http://localhost:8080/author');
     }
 
 }
