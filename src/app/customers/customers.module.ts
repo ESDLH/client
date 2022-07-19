@@ -7,11 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { CustomersListComponent } from './customers-list/customers-list.component';
 import { CustomersEditComponent } from './customers-edit/customers-edit.component';
-
-
 
 @NgModule({
   declarations: [
@@ -27,7 +26,8 @@ import { CustomersEditComponent } from './customers-edit/customers-edit.componen
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
 
   providers: [

@@ -2,6 +2,7 @@
     <h1>Listado de Categorías</h1>
 
     <mat-table [dataSource]="dataSource">
+        
         <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef> Identificador </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>

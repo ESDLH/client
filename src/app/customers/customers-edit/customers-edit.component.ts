@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CustomersService } from '../customers.service';
 import { Customer } from '../model/Customer';
 
@@ -15,11 +15,17 @@ export class CustomersEditComponent implements OnInit {
   
     constructor(
         public dialogRef: MatDialogRef<CustomersEditComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
         private customersService: CustomersService
     ) { }
 
     ngOnInit(): void {
-        this.customer = new Customer();
+        if (this.data.customer != null) {
+            this.customer = Object.assign({}, this.data.customer);
+        }
+        else {
+            this.customer = new Customer();
+        }
     }
 
     /**
@@ -29,7 +35,7 @@ export class CustomersEditComponent implements OnInit {
     onSave() {
         this.customersService.saveCustomer(this.customer).subscribe(result => {
             this.dialogRef.close();
-        })
+        });
     }
 
     /**
