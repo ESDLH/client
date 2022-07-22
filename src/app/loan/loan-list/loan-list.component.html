@@ -1,3 +1,52 @@
 <div class="container">
     <h1>Listado de Préstamos</h1>
+
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef> Identificador </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="game">
+            <mat-header-cell *matHeaderCellDef> Juego prestado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.game.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="customer">
+            <mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.customer.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="loan_date">
+            <mat-header-cell *matHeaderCellDef> Fecha Préstamo </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.loan_date}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="end_date">
+            <mat-header-cell *matHeaderCellDef> Fecha Devolución </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.end_date}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="accent">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-header-cell *matRowDef="let row; columns: displayedColumns;"></mat-header-cell>
+    
+    </mat-table>
+
+    <mat-paginator (page)="loadPage($event)" [pageSizeOptions]="[5, 10, 20]" [pageIndex]="pageNumber" [pageSize]="pageSize" [length]="totalElements" showFirstLastButtons></mat-paginator>
+
+    <div class="buttons">
+        <button mat-flat-button color="primary">Nuevo préstamo</button> 
+    </div>   
 </div>
