@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Pageable } from '../core/model/page/Pageable';
@@ -11,7 +12,9 @@ import { LOAN_DATA } from './model/mock-loans';
 
 export class LoanService {
 
-    constructor() { }
+    constructor(
+        private http: HttpClient
+    ) { }
 
     /**
      * Obtiene los préstamos de juegos realizados.
@@ -20,8 +23,9 @@ export class LoanService {
      *                 paginar los datos.
      * @returns Listado por páginas de los préstamos.
      */
-    getLoans(pageable : Pageable) : Observable<LoanPage> {
-        return of(LOAN_DATA);
+    getLoans(customerId? :number, gameId? : number, pageable? : Pageable) : Observable<LoanPage> {
+
+        return this.http.post<LoanPage>(this.composeFindUrl(customerId, gameId), {pageable:pageable});
     }
 
     /**
@@ -38,5 +42,33 @@ export class LoanService {
      */
     deleteLoan(idLoan: number): Observable<void> {
         return of(null);
+    }
+
+    /**
+     * Envía la URL compuesta al backend para que devuelva los
+     * préstamos en base al cliente, juego o fecha especificados.
+     * 
+     * @param customerId Id del cliente.
+     * @param gameId Id del juego.
+     * @returns URl completa a enviar.
+     */
+    private composeFindUrl(customerId?: number, gameId?: number) : string {
+
+        let params = '';
+
+        if (customerId != null){
+            params += 'customerId='+customerId;
+        }
+
+        if (gameId != null) {
+            if (params != '') params += "&";
+            params += "gameId=" +gameId;
+        }
+
+        let url = 'http://localhost:8080/loan';
+
+        if (params == '') return url;
+            else return url + '?' + params;
+
     }
 }

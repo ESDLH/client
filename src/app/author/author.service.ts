@@ -9,6 +9,7 @@ import { AUTHOR_DATA_LIST } from './model/mock-authors-list';
 @Injectable({
     providedIn: 'root'
 })
+
 export class AuthorService {
 
     constructor(

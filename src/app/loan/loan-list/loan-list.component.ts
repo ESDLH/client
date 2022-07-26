@@ -5,8 +5,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogConfirmationComponent } from 'src/app/core/dialog-confirmation/dialog-confirmation.component';
 import { Pageable } from 'src/app/core/model/page/Pageable';
 import { LoanEditComponent } from '../loan-edit/loan-edit.component';
+import { CustomersService } from 'src/app/customers/customers.service';
+import { Customer } from 'src/app/customers/model/Customer';
 import { LoanService } from '../loan.service';
 import { Loan } from '../model/Loan';
+import { GameService } from 'src/app/game/game.service';
+import { Game } from 'src/app/game/model/Game';
+
 
 @Component({
   selector: 'app-loan-list',
@@ -20,18 +25,67 @@ export class LoanListComponent implements OnInit {
     pageSize: number = 5;
     totalElements: number = 0;
 
+    customers : Customer[];
+    games : Game[];
+    filterCustomer: Customer;
+    filterGame: Game;
+    customerId: number;
+    gameId: number;
     dataSource = new MatTableDataSource<Loan>();
     displayedColumns: string[] = ['id','game','customer','loan_date','end_date','action'];
 
     constructor(
         private loanService: LoanService,
+        private customerService: CustomersService,
+        private gameService : GameService,
         public dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
+
+        this.customerService.getCustomers().subscribe(
+            customers => this.customers = customers
+        );
+
+        this.gameService.getGames().subscribe(
+            games => this.games = games
+        );
+
         this.loadPage();
     }
 
+    /**
+     * Desencadena una búsqueda por cliente, juego o fecha
+     * especificados.
+     */
+    onSearch(): void {
+
+        this.customerId = this.filterCustomer != null ? this.filterCustomer.id : null;
+        this.gameId = this.filterGame != null ? this.filterGame.id : null;
+
+        this.loadPage();
+    }
+
+    /**
+     * Borra los filtros de la búsqueda y devuelve
+     * todos los préstamos de la Base de Datos.
+     */
+    onCleanFilter(): void {
+
+        this.customerId = null;
+        this.gameId = null;
+
+        this.filterCustomer = null;
+        this.filterGame = null;
+
+        this.loadPage();
+    }
+
+    /**
+     * Carga los datos paginados en la página web.
+     * 
+     * @param event Evento desencadenante de la carga.
+     */
     loadPage(event?: PageEvent) {
 
         let pageable: Pageable = {
@@ -48,7 +102,7 @@ export class LoanListComponent implements OnInit {
             pageable.pageNumber = event.pageIndex;
         }
 
-        this.loanService.getLoans(pageable).subscribe(data => {
+        this.loanService.getLoans(this.customerId, this.gameId, pageable).subscribe(data => {
             this.dataSource.data = data.content;
             this.pageNumber = data.pageable.pageNumber;
             this.pageSize = data.pageable.pageSize;
