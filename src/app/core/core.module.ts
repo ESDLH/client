@@ -7,13 +7,13 @@ import { RouterModule } from '@angular/router';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-
+import { DialogMessageComponent } from './dialog-message/dialog-message.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    DialogConfirmationComponent
+    DialogConfirmationComponent,
+    DialogMessageComponent
   ],
   imports: [
     CommonModule,

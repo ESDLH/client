@@ -23,9 +23,9 @@ export class LoanService {
      *                 paginar los datos.
      * @returns Listado por páginas de los préstamos.
      */
-    getLoans(customerId? :number, gameId? : number, pageable? : Pageable) : Observable<LoanPage> {
+    getLoans(customerId? :number, gameId? : number, searchDate?: Date,  pageable? : Pageable) : Observable<LoanPage> {
 
-        return this.http.post<LoanPage>(this.composeFindUrl(customerId, gameId), {pageable:pageable});
+        return this.http.post<LoanPage>(this.composeFindUrl(customerId, gameId, searchDate), {pageable:pageable});
     }
 
     /**
@@ -52,9 +52,10 @@ export class LoanService {
      * @param gameId Id del juego.
      * @returns URl completa a enviar.
      */
-    private composeFindUrl(customerId?: number, gameId?: number) : string {
+    private composeFindUrl(customerId?: number, gameId?: number, searchDateBeforeConv?: Date) : string {
 
         let params = '';
+        let searchDate = '';
 
         if (customerId != null){
             params += 'customerId='+customerId;
@@ -63,6 +64,16 @@ export class LoanService {
         if (gameId != null) {
             if (params != '') params += "&";
             params += "gameId=" +gameId;
+        }
+
+        if (searchDateBeforeConv != null) {
+            if (params != '') params += "&";
+            
+            searchDate = searchDateBeforeConv.getFullYear().toString() + "-" 
+            + (searchDateBeforeConv.getMonth()+1).toString() + "-" 
+            + searchDateBeforeConv.getDate().toString() ;
+            
+            params += "searchDate=" + searchDate;
         }
 
         let url = 'http://localhost:8080/loan';

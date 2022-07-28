@@ -19,9 +19,9 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Seleccione una fecha:</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY">
+                <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="searchDate" disabled>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker #picker disabled="false"></mat-datepicker>
               </mat-form-field>
         </form>
 
@@ -75,7 +75,7 @@
         <mat-paginator (page)="loadPage($event)" [pageSizeOptions]="[5, 10, 20]" [pageIndex]="pageNumber" [pageSize]="pageSize" [length]="totalElements" showFirstLastButtons></mat-paginator>
 
         <div class="buttons">
-            <button mat-flat-button color="primary">Nuevo préstamo</button> 
+            <button mat-flat-button color="primary" (click)="createLoan()"  >Nuevo préstamo</button> 
         </div>
     </div>
 </div>

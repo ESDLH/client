@@ -1,9 +1,9 @@
 <div class="container">
+    <mat-icon class="warnIcon">warning</mat-icon>
     <h1>{{title}}</h1>
     <div [innerHTML]="description" class="description"></div>
 
     <div class="buttons">
-        <button mat-stroked-button (click)="onNo()">No</button>
-        <button mat-flat-button color="primary" (click)="onYes()">Sí</button>
+        <button mat-flat-button color="primary" (click)="onClose()">Aceptar</button>
     </div>
 </div>

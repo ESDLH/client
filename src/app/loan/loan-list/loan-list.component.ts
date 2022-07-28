@@ -31,6 +31,7 @@ export class LoanListComponent implements OnInit {
     filterGame: Game;
     customerId: number;
     gameId: number;
+    searchDate: Date;
     dataSource = new MatTableDataSource<Loan>();
     displayedColumns: string[] = ['id','game','customer','loan_date','end_date','action'];
 
@@ -54,6 +55,21 @@ export class LoanListComponent implements OnInit {
         this.loadPage();
     }
 
+      /**
+     * Permite crear un nuevo préstamo abriendo el cuadro
+     * de diálogo vacío.
+     */
+    createLoan() {
+        
+        const dialogRef = this.dialog.open(LoanEditComponent, {
+            data: {}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.ngOnInit();
+        });
+    }
+
     /**
      * Desencadena una búsqueda por cliente, juego o fecha
      * especificados.
@@ -74,6 +90,7 @@ export class LoanListComponent implements OnInit {
 
         this.customerId = null;
         this.gameId = null;
+        this.searchDate = null;
 
         this.filterCustomer = null;
         this.filterGame = null;
@@ -102,7 +119,7 @@ export class LoanListComponent implements OnInit {
             pageable.pageNumber = event.pageIndex;
         }
 
-        this.loanService.getLoans(this.customerId, this.gameId, pageable).subscribe(data => {
+        this.loanService.getLoans(this.customerId, this.gameId, this.searchDate, pageable).subscribe(data => {
             this.dataSource.data = data.content;
             this.pageNumber = data.pageable.pageNumber;
             this.pageSize = data.pageable.pageSize;
