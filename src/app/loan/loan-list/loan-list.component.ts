@@ -55,7 +55,7 @@ export class LoanListComponent implements OnInit {
         this.loadPage();
     }
 
-      /**
+    /**
      * Permite crear un nuevo préstamo abriendo el cuadro
      * de diálogo vacío.
      */
@@ -66,10 +66,30 @@ export class LoanListComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+
             this.ngOnInit();
         });
     }
 
+    /**
+     * Permite borrar un préstamo.
+     * 
+     * @param loan Préstamo a borrar.
+     */
+    deleteLoan(loan: Loan) {
+        const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+            data: { title: "Eliminar préstamo", description: "Atención: si elimina el préstamo, se perderán sus datos.<br>¿Desea eliminar el préstamo?" }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.loanService.deleteLoan(loan.id).subscribe(result => {
+                    this.ngOnInit();
+                });
+            }
+        });
+
+    }
     /**
      * Desencadena una búsqueda por cliente, juego o fecha
      * especificados.

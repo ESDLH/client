@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogMessageComponent } from 'src/app/core/dialog-message/dialog-message.component';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-loan-edit',
@@ -33,6 +34,7 @@ export class LoanEditComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+
         this.loan = new Loan();
         
         this.customerService.getCustomers().subscribe(
@@ -44,6 +46,19 @@ export class LoanEditComponent implements OnInit {
         );
     }
 
+    /**
+     * Guarda el préstamo en la base de datos, previa validación.
+     * 
+     * En front:
+     * -> Si la fecha de devolución es anterior a la de préstamo.
+     * -> Si el préstamo excede en más de 14 días.
+     * 
+     * En backend:
+     * -> Si el juego ha sido prestado a otro cliente en el rango de
+     *    fechas seleccionado.
+     * -> Si el cliente tiene prestados más de dos juegos en una misma
+     *    fecha.
+     */
     onSave() {
 
         var final_date = Math.abs((this.loan.loan_date.getTime() - this.loan.end_date.getTime())) / (1000 * 3600 * 24);
@@ -51,8 +66,8 @@ export class LoanEditComponent implements OnInit {
         if (this.loan.end_date < this.loan.loan_date){
 
             const dialogRef = this.dialog.open(DialogMessageComponent, {
-                data: { title: "Error en fecha final préstamo",
-                description: "La fecha final seleccionada es anterior a la fecha inicial.<br>" 
+                data: { title: "Error en la fecha de devolución",
+                description: "La fecha de devolución seleccionada es anterior a la fecha inicial.<br>" 
                 + "Seleccione el mismo día o una fecha posterior para devolver el juego."}
             });
 
@@ -67,6 +82,39 @@ export class LoanEditComponent implements OnInit {
             });
 
             this.loan.end_date = null;
+        }
+        else {
+            this.loanService.saveLoan(this.loan).subscribe(response => {
+
+                if (response == 100) {
+                    const dialogRef = this.dialog.open(DialogMessageComponent, {
+                        data: {
+                            title: "Juego prestado",
+                            description: "Este juego ya está prestado en el rango de fechas indicado.<br>" + 
+                            "Seleccione un período de préstamo alternativo."
+                        }
+                    });
+
+                    this.loan.loan_date = null;
+                    this.loan.end_date = null;
+                }
+                else if (response == 200) {
+                    const dialogRef = this.dialog.open(DialogMessageComponent, {
+                        data: {
+                            title: "Cliente con dos o más préstamos",
+                            description: "Este cliente tiene dos o más préstamos dentro de las fechas especificadas.<br>" + 
+                            "Seleccione un período de préstamo alternativo."
+                        }
+                    });
+
+                    this.loan.loan_date = null;
+                    this.loan.end_date = null;
+
+                }
+                else {
+                    this.dialogRef.close();
+                }
+            });
         }
     }
 
