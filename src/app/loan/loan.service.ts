@@ -19,6 +19,7 @@ export class LoanService {
     /**
      * Obtiene los préstamos de juegos realizados.
      * 
+     * 
      * @param pageable Objeto Angular Pageable. Permite
      *                 paginar los datos.
      * @returns Listado por páginas de los préstamos.
@@ -32,16 +33,21 @@ export class LoanService {
      * Guarda un préstamo en la base de datos.
      * @param loan Préstamo a guardar.
      */
-    saveLoan(loan: Loan): Observable<void> {
-        return of(null);
+    saveLoan(loan: Loan): Observable<any> {
+        
+        let url = 'http://localhost:8080/loan';
+        if (loan.id != null) url += '/'+loan.id;
+
+        return this.http.put(url, loan, {observe: 'body'});
     }
 
     /**
      * Borra un préstamo de la base de datos.
      * @param idLoan Id del préstamo a borrar.
      */
-    deleteLoan(idLoan: number): Observable<void> {
-        return of(null);
+    deleteLoan(idLoan: number): Observable<any> {
+        
+        return this.http.delete('http://localhost:8080/loan/'+idLoan);
     }
 
     /**
